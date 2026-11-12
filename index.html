@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ход конём — шахматы для детей в игровой форме</title>
+  <meta name="description" content="Короткие шахматные задания для детей 7–10 лет: помоги фигуре добраться до замка за 3–4 хода, собирай звёзды и баллы, обменивай их на награды.">
+  <meta property="og:title" content="Ход конём — шахматы для детей">
+  <meta property="og:description" content="Игровые задания по шахматным фигурам, баллы и награды. 10 минут в день — без скучной теории.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2322304F'/%3E%3Ctext x='50' y='74' font-size='66' text-anchor='middle' fill='%23FFC93C'%3E%E2%99%9E%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#trainer">Перейти к заданиям</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Ход конём — на главную">
+        <span class="brand-mark" aria-hidden="true">♞</span>
+        <span class="brand-text">
+          <strong>Ход конём</strong>
+          <span>шахматная школа для детей</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Основная навигация">
+        <a href="#how">Как играть</a>
+        <a href="#trainer">Задания</a>
+        <a href="#rewards">Награды</a>
+        <a href="#parents">Родителям</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="points-pill" id="headerPointsPill" title="Твои баллы">
+          <span class="points-star" aria-hidden="true">★</span>
+          <span id="headerPoints">0</span>
+          <span class="points-word" id="headerPointsWord">баллов</span>
+        </div>
+        <a href="#trainer" class="btn btn-primary btn-sm">Играть</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Для детей 7–10 лет · без скучной теории</span>
+          <h1>Шахматы — это <span class="highlight">приключение</span>, а не урок</h1>
+          <p class="lead">Короткие задания по одной фигуре: помоги коню добраться до замка, собери звёзды и получай баллы. 10 минут в день — и ребёнок сам просит «ещё одну задачу».</p>
+          <div class="hero-actions">
+            <a href="#trainer" class="btn btn-primary btn-lg">Начать первое задание <span aria-hidden="true">→</span></a>
+            <a href="#how" class="btn btn-ghost btn-lg">Как это работает</a>
+          </div>
+          <ul class="hero-stats" aria-label="Коротко о тренажёре">
+            <li><strong id="heroTaskCount">62</strong><span id="heroTaskWord">коротких задания</span></li>
+            <li><strong>5</strong><span>шахматных фигур</span></li>
+            <li><strong>3–4</strong><span>хода на решение</span></li>
+          </ul>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="quest-card">
+            <div class="quest-head">
+              <span class="quest-label">Задание дня</span>
+              <span class="quest-level">Уровень 1</span>
+            </div>
+            <div class="mini-board">
+              <span class="mini-piece mini-knight">♞</span>
+              <span class="mini-piece mini-castle">🏰</span>
+              <span class="mini-star s1">★</span>
+              <span class="mini-star s2">★</span>
+              <span class="mini-star s3">★</span>
+              <span class="mini-dot d1"></span>
+              <span class="mini-dot d2"></span>
+              <span class="mini-dot d3"></span>
+              <span class="mini-dot d4"></span>
+            </div>
+            <div class="quest-foot">
+              <span class="quest-goal">🏰 Дойти конём за 4 хода</span>
+              <span class="quest-reward">+15 ★</span>
+            </div>
+          </div>
+          <span class="float-chip chip-star">★ +5</span>
+          <span class="float-chip chip-trophy">🏆</span>
+          <span class="hero-spark spark-1">✦</span>
+          <span class="hero-spark spark-2">✦</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section how-section" id="how">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Просто как три хода</span>
+          <h2>Как проходит занятие</h2>
+          <p>Никаких длинных правил. Сначала играем — правила запоминаются сами.</p>
+        </div>
+
+        <div class="steps">
+          <article class="step-card">
+            <span class="step-num">1</span>
+            <span class="step-icon" aria-hidden="true">♟</span>
+            <h3>Выбери фигуру</h3>
+            <p>Пешка, конь, слон, ладья или ферзь. У каждой фигуры — целая серия маленьких приключений.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-num">2</span>
+            <span class="step-icon" aria-hidden="true">🏰</span>
+            <h3>Реши задание</h3>
+            <p>Собери все звёзды и доведи фигуру до замка. Ходов мало — нужно подумать.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-num">3</span>
+            <span class="step-icon" aria-hidden="true">★</span>
+            <h3>Копи баллы</h3>
+            <p>За решение — баллы, за красивый маршрут — бонус. Баллы меняются на награды.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section trainer-section" id="trainer">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Тренажёр</span>
+          <h2>Помоги фигуре добраться до замка</h2>
+          <p>Нажимай на свою фигуру, а затем на подсвеченную клетку. Собери все звёзды и встань на замок.</p>
+        </div>
+
+        <div class="trainer">
+          <div class="board-card">
+            <div class="board-topline">
+              <span class="board-puzzle-label" id="boardPuzzleLabel">Пешка · задание 1</span>
+              <span class="board-legend">
+                <span class="legend-item"><i class="legend-dot legend-player"></i>твоя</span>
+                <span class="legend-item"><i class="legend-dot legend-guard"></i>страж</span>
+                <span class="legend-item"><i class="legend-star">★</i>звезда</span>
+                <span class="legend-item"><i class="legend-castle">🏰</i>цель</span>
+              </span>
+            </div>
+
+            <div class="board-shell">
+              <div class="board" id="board" role="group" aria-label="Шахматная доска с заданием"></div>
+              <div class="board-effects" id="boardEffects" aria-hidden="true"></div>
+            </div>
+
+            <div class="board-bottom">
+              <button type="button" class="btn btn-ghost btn-sm" id="restartBtn" aria-label="Начать это задание заново">
+                <span aria-hidden="true">↻</span> Заново
+              </button>
+              <p class="board-help">Точки показывают, куда можно сходить.</p>
+              <button type="button" class="btn btn-hint btn-sm" id="hintBtn">
+                <span aria-hidden="true">💡</span> Подсказка
+              </button>
+            </div>
+          </div>
+
+          <aside class="trainer-panel" aria-label="Задание и прогресс">
+            <div class="panel-progress">
+              <div class="level-row">
+                <div class="level-name-wrap">
+                  <span class="mini-label">Твой уровень</span>
+                  <strong id="levelName">Новичок</strong>
+                </div>
+                <div class="points-big">
+                  <span class="points-star" aria-hidden="true">★</span>
+                  <strong id="panelPoints">0</strong>
+                  <span>баллов</span>
+                </div>
+              </div>
+              <div class="progress-track" role="progressbar" aria-label="Прогресс до следующего уровня" aria-valuemin="0" aria-valuemax="100" id="levelTrack">
+                <div class="progress-fill" id="levelFill"></div>
+              </div>
+              <p class="progress-note" id="levelNote">До уровня «Ученик» — 30 баллов</p>
+            </div>
+
+            <div class="piece-tabs" id="pieceTabs" role="tablist" aria-label="Выбери фигуру"></div>
+            <div class="puzzle-nav" id="puzzleNav" role="group" aria-label="Задания выбранной фигуры"></div>
+
+            <div class="puzzle-card">
+              <div class="puzzle-heading">
+                <div>
+                  <span class="puzzle-kicker" id="puzzleKicker">Пешка · задание 1</span>
+                  <h3 id="puzzleTitle">Первый шаг</h3>
+                </div>
+                <span class="puzzle-par" id="puzzlePar" title="Столько ходов нужно, чтобы получить бонус">3 хода</span>
+              </div>
+              <p class="puzzle-tip" id="puzzleTip">Пешка ходит только вперёд.</p>
+
+              <div class="puzzle-stats">
+                <div class="stat">
+                  <span>Ходы</span>
+                  <strong id="movesStat">0 / 5</strong>
+                </div>
+                <div class="stat">
+                  <span>Звёзды</span>
+                  <strong id="starsStat">0 / 1</strong>
+                </div>
+                <div class="stat">
+                  <span>Бонус</span>
+                  <strong id="bonusStat">+5</strong>
+                </div>
+              </div>
+
+              <p class="puzzle-message" id="puzzleMessage" aria-live="polite">Нажми на свою фигуру, чтобы увидеть её ходы.</p>
+              <div class="puzzle-actions" id="puzzleActions"></div>
+            </div>
+
+            <div class="solved-summary">
+              <span class="solved-star" aria-hidden="true">★</span>
+              <span><strong id="solvedCount">0 из 62</strong> заданий решено</span>
+              <span class="solved-divider" aria-hidden="true"></span>
+              <span><strong id="claimedCount">0</strong> наград получено</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section skills-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Польза без зубрёжки</span>
+          <h2>Что тренирует ребёнок</h2>
+          <p>Каждое задание — маленькая задача на мышление, а не тест на память.</p>
+        </div>
+
+        <div class="skills-grid">
+          <article class="skill-card">
+            <span class="skill-icon" aria-hidden="true">🧠</span>
+            <h3>Логику</h3>
+            <p>Ищет короткий путь и считает ходы на два-три шага вперёд.</p>
+          </article>
+          <article class="skill-card">
+            <span class="skill-icon" aria-hidden="true">🎯</span>
+            <h3>Внимание</h3>
+            <p>Замечает звёзды, стражей и камни, которые нельзя обойти.</p>
+          </article>
+          <article class="skill-card">
+            <span class="skill-icon" aria-hidden="true">🧩</span>
+            <h3>Пространственное мышление</h3>
+            <p>Читает доску, диагонали и направление хода каждой фигуры.</p>
+          </article>
+          <article class="skill-card">
+            <span class="skill-icon" aria-hidden="true">🌱</span>
+            <h3>Усидчивость</h3>
+            <p>Короткие задания с понятной наградой легко довести до конца.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section rewards-section" id="rewards">
+      <div class="container">
+        <div class="rewards-head">
+          <div class="section-head section-head-left">
+            <span class="eyebrow">Копи и обменивай</span>
+            <h2>Магазин наград</h2>
+            <p>Баллы не сгорают. Решил задание — стал ближе к призу.</p>
+          </div>
+          <div class="balance-card">
+            <span class="balance-label">У тебя сейчас</span>
+            <strong><span aria-hidden="true">★</span> <span id="rewardPoints">0</span></strong>
+            <span class="balance-word" id="rewardPointsWord">баллов</span>
+          </div>
+        </div>
+
+        <div class="rewards-grid" id="rewardsGrid"></div>
+        <p class="rewards-note">Награды — это игра. Обменивайте баллы вместе с ребёнком и заранее договоритесь, что они значат.</p>
+      </div>
+    </section>
+
+    <section class="section parents-section" id="parents">
+      <div class="container parents-grid">
+        <div class="parents-copy">
+          <span class="eyebrow">Родителям</span>
+          <h2>10 минут в день — без давления и зубрёжки</h2>
+          <p>Тренажёр знакомит ребёнка с тем, как ходят фигуры, через маленькие задачи с понятной целью. Не нужно садиться за парту: достаточно нескольких минут и желания помочь фигуре.</p>
+          <ul class="check-list">
+            <li>Одна фигура за раз — ребёнок не теряется в правилах.</li>
+            <li>Понятная цель: звёзды, замок и счётчик ходов.</li>
+            <li>Баллы и награды мотивируют возвращаться.</li>
+            <li>Без регистрации и рекламы. Прогресс хранится в этом браузере.</li>
+          </ul>
+        </div>
+
+        <aside class="parent-card">
+          <h3>Три маленьких правила</h3>
+          <ol>
+            <li>Хвалите за попытку, а не только за победу.</li>
+            <li>Разрешайте пользоваться подсказкой — это тоже учёба.</li>
+            <li>Останавливайтесь, пока ребёнок ещё хочет «ещё одну».</li>
+          </ol>
+          <button type="button" class="btn btn-ghost btn-sm parent-reset" id="resetProgress">Сбросить прогресс</button>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark brand-mark-light" aria-hidden="true">♞</span>
+        <div>
+          <strong>Ход конём</strong>
+          <p>Шахматы для детей в игровой форме</p>
+        </div>
+      </div>
+      <p class="footer-note">Баллы и прогресс сохраняются только на этом устройстве. <span id="footerYear">2026</span></p>
+    </div>
+  </footer>
+
+  <dialog class="modal" id="modal" aria-labelledby="modalTitle">
+    <div class="modal-card" id="modalCard"></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="puzzles.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
