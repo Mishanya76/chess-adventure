@@ -1259,6 +1259,7 @@ a {
 }
 
 .puzzle-dot {
+  position: relative;
   height: 38px;
   padding: 0 2px;
   border: 2px solid #e9decb;
@@ -1269,6 +1270,31 @@ a {
   font-weight: 900;
   cursor: pointer;
   transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.puzzle-dot.is-boss {
+  border-color: #e3b23c;
+  background: #fff7dc;
+  color: #8a5a00;
+}
+
+.puzzle-dot.is-boss:hover {
+  border-color: #c9971f;
+}
+
+.puzzle-dot.is-boss.is-solved {
+  border-color: #b8860b;
+  background: var(--green);
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #ffd76a;
+}
+
+.puzzle-dot .dot-crown {
+  margin-left: 1px;
+  font-size: 0.62rem;
+  line-height: 1;
+  vertical-align: 1px;
+  pointer-events: none;
 }
 
 .puzzle-dot:hover {
@@ -1292,6 +1318,15 @@ a {
   border: 1px solid rgba(30, 42, 68, 0.09);
   border-radius: 18px;
   background: #fdfbf6;
+}
+
+.puzzle-card.is-boss {
+  border-color: #e3b23c;
+  box-shadow: 0 0 0 3px rgba(255, 199, 60, 0.18);
+}
+
+.puzzle-card.is-boss .puzzle-kicker {
+  color: #9a6a00;
 }
 
 .puzzle-heading {
@@ -1336,7 +1371,7 @@ a {
 
 .puzzle-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 7px;
   margin-top: 12px;
 }
@@ -1363,6 +1398,11 @@ a {
   font-size: 1rem;
   font-weight: 900;
   line-height: 1.2;
+}
+
+.stat-rating strong {
+  color: #c98a00;
+  letter-spacing: 0.02em;
 }
 
 .puzzle-message {
@@ -1841,6 +1881,23 @@ a {
   color: var(--muted);
   font-size: 0.85rem;
   line-height: 1.45;
+}
+
+.win-stars {
+  margin-top: 14px;
+  color: #f2b600;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-shadow: 0 2px 0 #fff1b8;
+}
+
+.win-stars-note {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .win-score {
@@ -2492,6 +2549,7 @@ a {
   }
 
   .puzzle-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 5px;
   }
 

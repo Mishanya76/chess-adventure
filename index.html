@@ -51,7 +51,7 @@
         <div class="hero-copy">
           <span class="eyebrow">Для детей 7–10 лет · без скучной теории</span>
           <h1>Шахматы — это <span class="highlight">приключение</span>, а не урок</h1>
-          <p class="lead">Короткие задания по одной фигуре: помоги коню добраться до замка, собери звёзды и получай баллы. 10 минут в день — и ребёнок сам просит «ещё одну задачу».</p>
+          <p class="lead">Короткие задания по одной фигуре: помоги коню добраться до замка, собери звёзды и получай баллы. А в конце каждой фигуры ждёт босс! 10 минут в день — и ребёнок сам просит «ещё одну задачу».</p>
           <div class="hero-actions">
             <a href="#trainer" class="btn btn-primary btn-lg">Начать первое задание <span aria-hidden="true">→</span></a>
             <a href="#how" class="btn btn-ghost btn-lg">Как это работает</a>
@@ -59,7 +59,7 @@
           <ul class="hero-stats" aria-label="Коротко о тренажёре">
             <li><strong id="heroTaskCount">62</strong><span id="heroTaskWord">коротких задания</span></li>
             <li><strong>5</strong><span>шахматных фигур</span></li>
-            <li><strong>3–4</strong><span>хода на решение</span></li>
+            <li><strong>3–7</strong><span>ходов на решение</span></li>
           </ul>
         </div>
 
@@ -81,7 +81,7 @@
               <span class="mini-dot d4"></span>
             </div>
             <div class="quest-foot">
-              <span class="quest-goal">🏰 Дойти конём за 4 хода</span>
+              <span class="quest-goal">🏰 Дойти конём за 5 ходов</span>
               <span class="quest-reward">+15 ★</span>
             </div>
           </div>
@@ -117,8 +117,8 @@
           <article class="step-card">
             <span class="step-num">3</span>
             <span class="step-icon" aria-hidden="true">★</span>
-            <h3>Копи баллы</h3>
-            <p>За решение — баллы, за красивый маршрут — бонус. Баллы меняются на награды.</p>
+            <h3>Получи звёзды</h3>
+            <p>Три звезды — за par без подсказок. После каждой фигуры — босс с отдельной наградой.</p>
           </article>
         </div>
       </div>
@@ -182,7 +182,7 @@
             <div class="piece-tabs" id="pieceTabs" role="tablist" aria-label="Выбери фигуру"></div>
             <div class="puzzle-nav" id="puzzleNav" role="group" aria-label="Задания выбранной фигуры"></div>
 
-            <div class="puzzle-card">
+            <div class="puzzle-card" id="puzzleCard">
               <div class="puzzle-heading">
                 <div>
                   <span class="puzzle-kicker" id="puzzleKicker">Пешка · задание 1</span>
@@ -205,6 +205,10 @@
                   <span>Бонус</span>
                   <strong id="bonusStat">+5</strong>
                 </div>
+                <div class="stat stat-rating">
+                  <span>Оценка</span>
+                  <strong id="ratingStat">—</strong>
+                </div>
               </div>
 
               <p class="puzzle-message" id="puzzleMessage" aria-live="polite">Нажми на свою фигуру, чтобы увидеть её ходы.</p>
@@ -213,7 +217,9 @@
 
             <div class="solved-summary">
               <span class="solved-star" aria-hidden="true">★</span>
-              <span><strong id="solvedCount">0 из 62</strong> заданий решено</span>
+              <span><strong id="totalStars">0</strong> звёзд</span>
+              <span class="solved-divider" aria-hidden="true"></span>
+              <span><strong id="solvedCount">0 из 82</strong> заданий решено</span>
               <span class="solved-divider" aria-hidden="true"></span>
               <span><strong id="claimedCount">0</strong> наград получено</span>
             </div>

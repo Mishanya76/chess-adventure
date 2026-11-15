@@ -4,6 +4,8 @@
   const FILES = "abcdefgh";
   const STORAGE_KEY = "chess-adventure-progress-v1";
   const EXTRA_MOVES = 2;
+  const BOSS_EXTRA_MOVES = 1;
+  const MAX_STARS = 3;
   const CORRECT_MESSAGE = "Нажми на свою фигуру, чтобы увидеть её ходы.";
 
   const REWARDS = [
@@ -67,6 +69,7 @@
     boardPuzzleLabel: $("#boardPuzzleLabel"),
     pieceTabs: $("#pieceTabs"),
     puzzleNav: $("#puzzleNav"),
+    puzzleCard: $("#puzzleCard"),
     puzzleKicker: $("#puzzleKicker"),
     puzzleTitle: $("#puzzleTitle"),
     puzzleTip: $("#puzzleTip"),
@@ -74,6 +77,7 @@
     movesStat: $("#movesStat"),
     starsStat: $("#starsStat"),
     bonusStat: $("#bonusStat"),
+    ratingStat: $("#ratingStat"),
     puzzleMessage: $("#puzzleMessage"),
     puzzleActions: $("#puzzleActions"),
     levelName: $("#levelName"),
@@ -82,6 +86,7 @@
     levelNote: $("#levelNote"),
     panelPoints: $("#panelPoints"),
     solvedCount: $("#solvedCount"),
+    totalStars: $("#totalStars"),
     claimedCount: $("#claimedCount"),
     rewardPoints: $("#rewardPoints"),
     rewardPointsWord: $("#rewardPointsWord"),
@@ -141,7 +146,7 @@
         ...saved,
         points: Number.isFinite(saved.points) ? saved.points : 0,
         earned: Number.isFinite(saved.earned) ? saved.earned : 0,
-        solved: saved.solved && typeof saved.solved === "object" ? saved.solved : {},
+        solved: migrateSolved(saved.solved),
         rewards: Array.isArray(saved.rewards) ? saved.rewards : [],
         bonusPieces: Array.isArray(saved.bonusPieces) ? saved.bonusPieces : [],
         lastPuzzleId: typeof saved.lastPuzzleId === "string" ? saved.lastPuzzleId : null
@@ -149,6 +154,35 @@
     } catch {
       return base;
     }
+  }
+
+  function migrateSolved(rawSolved) {
+    if (!rawSolved || typeof rawSolved !== "object") return {};
+    const byId = new Map(CHESS_PUZZLES.map((puzzle) => [puzzle.id, puzzle]));
+    const solved = {};
+    Object.entries(rawSolved).forEach(([id, record]) => {
+      if (!record || typeof record !== "object") return;
+      const puzzle = byId.get(id);
+      const moves = Number.isFinite(record.moves) ? record.moves : puzzle ? puzzle.par : 1;
+      let stars = Number(record.stars);
+      if (!Number.isFinite(stars) || stars < 1 || stars > MAX_STARS) {
+        if (record.perfect) {
+          stars = 3;
+        } else if (puzzle && moves > puzzle.par + 1) {
+          stars = 1;
+        } else {
+          stars = 2;
+        }
+      }
+      solved[id] = {
+        moves,
+        stars: Math.max(1, Math.min(MAX_STARS, Math.round(stars))),
+        hints: Number.isFinite(record.hints) ? Math.max(0, Math.round(record.hints)) : 0,
+        perfect: Boolean(record.perfect) || stars >= MAX_STARS,
+        at: Number.isFinite(record.at) ? record.at : 0
+      };
+    });
+    return solved;
   }
 
   function saveProgress() {
@@ -182,6 +216,28 @@
 
   function solvedCount() {
     return Object.keys(progress.solved).length;
+  }
+
+  function totalStars() {
+    return Object.values(progress.solved).reduce(
+      (sum, record) => sum + (Number.isFinite(record.stars) ? record.stars : 0),
+      0
+    );
+  }
+
+  function maxMovesFor(puzzle) {
+    return puzzle.par + (puzzle.boss ? BOSS_EXTRA_MOVES : EXTRA_MOVES);
+  }
+
+  function starRating(puzzle, moves, hints) {
+    if (moves <= puzzle.par) return hints === 0 ? 3 : 2;
+    if (moves <= puzzle.par + 1 && hints === 0) return 2;
+    return 1;
+  }
+
+  function bestStarsFor(puzzle) {
+    const record = progress.solved[puzzle.id];
+    return record && Number.isFinite(record.stars) ? record.stars : 0;
   }
 
   function allPieceSolved(pieceId) {
@@ -371,6 +427,7 @@
       guards: [...puzzle.guards],
       rocks: [...puzzle.rocks],
       moves: 0,
+      hints: 0,
       status: "playing",
       scored: false,
       lastFrom: null,
@@ -440,6 +497,7 @@
     }
 
     state.hint = path[0];
+    state.game.hints += 1;
     state.selected = null;
     state.legal = [];
     const next = path[0];
@@ -547,7 +605,7 @@
     if (hadStar) addEffect(to, "★ +1", "star");
     if (hadGuard) addEffect(to, "Страж!", "capture");
 
-    const maxMoves = puzzle.par + EXTRA_MOVES;
+    const maxMoves = maxMovesFor(puzzle);
     if (game.pos === puzzle.target && game.stars.length === 0) {
       game.status = "won";
       setMessage("Замок взят! Задание решено.", "success");
@@ -595,16 +653,22 @@
     const previousRecord = progress.solved[puzzle.id];
     const isNew = !previousRecord;
     const perfect = game.moves <= puzzle.par;
+    const stars = starRating(puzzle, game.moves, game.hints);
+    const boss = Boolean(puzzle.boss);
     let earned = 0;
     let pieceBonus = false;
     let improved = false;
+    let bestStars = stars;
 
     if (isNew) {
       earned = 10;
       if (perfect) earned += 5;
+      if (boss) earned += 5;
 
       progress.solved[puzzle.id] = {
         moves: game.moves,
+        stars,
+        hints: game.hints,
         perfect,
         at: Date.now()
       };
@@ -619,13 +683,14 @@
       progress.earned += earned;
       saveProgress();
     } else {
-      improved = game.moves < previousRecord.moves;
+      const previousStars = Number.isFinite(previousRecord.stars) ? previousRecord.stars : 1;
+      bestStars = Math.max(previousStars, stars);
+      improved = game.moves < previousRecord.moves || bestStars > previousStars;
       if (improved) {
-        previousRecord.moves = game.moves;
+        previousRecord.moves = Math.min(previousRecord.moves, game.moves);
+        previousRecord.stars = bestStars;
+        if (stars > previousStars) previousRecord.hints = game.hints;
         previousRecord.perfect = previousRecord.perfect || perfect;
-        saveProgress();
-      } else if (perfect && !previousRecord.perfect) {
-        previousRecord.perfect = true;
         saveProgress();
       }
     }
@@ -633,7 +698,9 @@
     setMessage(
       isNew
         ? `Задание решено! +${earned} ${plural(earned, ["балл", "балла", "баллов"])}.`
-        : "Задание уже было решено. Рекорд сохранён!",
+        : improved
+          ? "Новый рекорд! Оценка сохранена."
+          : "Задание уже было решено. Рекорд сохранён!",
       "success"
     );
 
@@ -651,6 +718,9 @@
       pieceBonus,
       improved,
       moves: game.moves,
+      stars,
+      bestStars,
+      boss,
       puzzle
     });
   }
@@ -703,6 +773,7 @@
         ])}`
       : "Это высший уровень. Так держать!";
     els.solvedCount.textContent = `${solvedCount()} из ${CHESS_PUZZLES.length}`;
+    if (els.totalStars) els.totalStars.textContent = String(totalStars());
     els.claimedCount.textContent = String(progress.rewards.length);
   }
 
@@ -725,13 +796,21 @@
   function renderPuzzleNav() {
     const list = puzzlesFor(state.pieceId);
     els.puzzleNav.innerHTML = list.map((puzzle, index) => {
-      const solved = Boolean(progress.solved[puzzle.id]);
+      const record = progress.solved[puzzle.id];
+      const solved = Boolean(record);
       const active = index === state.puzzleIndex;
+      const boss = Boolean(puzzle.boss);
+      const stars = record && Number.isFinite(record.stars) ? record.stars : 0;
       return `
-        <button type="button" class="puzzle-dot${solved ? " is-solved" : ""}${active ? " is-active" : ""}"
-          data-puzzle="${index}" aria-label="Задание ${index + 1}: ${puzzle.title}${solved ? ", решено" : ""}"
+        <button type="button" class="puzzle-dot${solved ? " is-solved" : ""}${active ? " is-active" : ""}${
+          boss ? " is-boss" : ""
+        }"
+          data-puzzle="${index}" aria-label="${boss ? "Босс, " : ""}задание ${index + 1}: ${puzzle.title}${
+            solved ? `, решено, ${stars} из 3 звёзд` : ""
+          }"
           aria-current="${active ? "true" : "false"}">
           ${solved ? "✓" : index + 1}
+          ${boss ? '<span class="dot-crown" aria-hidden="true">👑</span>' : ""}
         </button>`;
     }).join("");
   }
@@ -813,16 +892,30 @@
     const puzzle = currentPuzzle();
     const game = state.game;
     const piece = pieceInfo(puzzle.piece);
-    const maxMoves = puzzle.par + EXTRA_MOVES;
+    const maxMoves = maxMovesFor(puzzle);
     const collected = puzzle.stars.length - game.stars.length;
+    const bestStars = bestStarsFor(puzzle);
+    const rating = bestStars
+      ? `${"★".repeat(bestStars)}${"☆".repeat(MAX_STARS - bestStars)}`
+      : "—";
 
-    els.puzzleKicker.textContent = `${piece.name} · задание ${state.puzzleIndex + 1}`;
+    if (els.puzzleCard) els.puzzleCard.classList.toggle("is-boss", Boolean(puzzle.boss));
+    els.puzzleKicker.textContent = puzzle.boss
+      ? `${piece.name} · босс`
+      : `${piece.name} · задание ${state.puzzleIndex + 1}`;
     els.puzzleTitle.textContent = puzzle.title;
     els.puzzleTip.textContent = puzzle.tip;
     els.puzzlePar.textContent = `${puzzle.par} ${plural(puzzle.par, ["ход", "хода", "ходов"])}`;
     els.movesStat.textContent = `${game.moves} / ${maxMoves}`;
     els.starsStat.textContent = `${collected} / ${puzzle.stars.length}`;
     els.bonusStat.textContent = game.moves <= puzzle.par ? "+5" : "—";
+    if (els.ratingStat) {
+      els.ratingStat.textContent = rating;
+      els.ratingStat.setAttribute(
+        "aria-label",
+        bestStars ? `Лучшая оценка: ${bestStars} из 3 звёзд` : "Оценка появится после победы"
+      );
+    }
 
     els.puzzleMessage.textContent = state.message;
     els.puzzleMessage.className = `puzzle-message${state.messageKind ? ` is-${state.messageKind}` : ""}`;
@@ -915,6 +1008,7 @@
     if (result.isNew) {
       breakdown.push(["Задание решено", "+10"]);
       if (result.perfect) breakdown.push([`Без лишних ходов (${puzzle.par})`, "+5"]);
+      if (result.boss) breakdown.push(["Победа над боссом", "+5"]);
       if (result.pieceBonus) breakdown.push(["Все задания фигуры", "+10"]);
     }
 
@@ -923,6 +1017,17 @@
       : result.improved
         ? `Новый рекорд: ${result.moves} ${plural(result.moves, ["ход", "хода", "ходов"])}! Баллы за это задание уже начислены раньше.`
         : "Это задание уже было решено. Баллы не начисляются, но ты можешь улучшить рекорд.";
+
+    const rating = result.bestStars || result.stars;
+    const starsHtml = `<div class="win-stars" aria-label="Оценка: ${rating} из 3">${"★".repeat(
+      rating
+    )}${"☆".repeat(MAX_STARS - rating)}</div>`;
+    const starsNote =
+      rating >= 3
+        ? "Три звезды! Без подсказок и лишних ходов."
+        : rating === 2
+          ? "Две звезды. Ещё немного — и будет три!"
+          : "Звезда за победу. Попробуй пройти короче!";
 
     const score =
       result.isNew
@@ -942,6 +1047,8 @@
       <p class="modal-kicker">${piece.name} · ${puzzle.title}</p>
       <h2 class="modal-title" id="modalTitle">${result.isNew ? "Победа!" : "Отличный ход!"}</h2>
       <p class="modal-subtitle">${subtitle}</p>
+      ${starsHtml}
+      <p class="win-stars-note">${starsNote}</p>
       ${score}
       ${breakdownHtml}
       <div class="modal-actions">
